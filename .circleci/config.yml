@@ -3,7 +3,7 @@ version: 2.1
 workflows:
   commit:
     jobs:
-      - tick
+      - rapid_tick
   schedule:
     jobs:
       - tick
@@ -24,3 +24,12 @@ jobs:
           name: Run a tick
           command: docker compose up
           no_output_timeout: 59m
+  rapid_tick:
+    machine:
+      image: default
+    steps:
+      - checkout
+      - run:
+          name: Run a rapid tick
+          command: docker compose up
+          no_output_timeout: 2m
