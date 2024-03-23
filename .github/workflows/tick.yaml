@@ -15,6 +15,6 @@ jobs:
 
       - name: Run a tick
         timeout-minutes: 75
-        run: timeout --preserve-status 70m docker compose up && docker-compose down
+        run: timeout --preserve-status 70m docker compose up && docker-compose down || true
         env:
           TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}

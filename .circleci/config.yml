@@ -1,15 +1,16 @@
 
 version: 2.1
 workflows:
+  version: 2
   commit:
     jobs:
       - rapid_tick
   ticks:
     jobs:
-      - tick
+      - rapid_tick
     triggers:
       - schedule:
-          cron: "0 * * * *"
+          cron: "* * * * *"
           filters:
             branches:
               only:
