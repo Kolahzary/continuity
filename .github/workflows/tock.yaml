@@ -1,0 +1,25 @@
+name: tock
+
+on:
+  schedule:
+      - cron: '30 * * * *'
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  tock:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run tock
+        run: docker compose up
+        env:
+          TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
+      
