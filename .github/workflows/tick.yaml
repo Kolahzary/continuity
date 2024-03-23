@@ -13,13 +13,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run tick
-        timeout-minutes: 120
-        continue-on-error: true
-        run: docker compose up
+      - name: Run a tick
+        timeout-minutes: 75
+        run: timeout --preserve-status 70m docker compose up && docker-compose down
         env:
           TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
-
-      - name: Say hello!
-        run: echo "Hello, world!"
-

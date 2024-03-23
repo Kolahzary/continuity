@@ -4,12 +4,22 @@ workflows:
   commit:
     jobs:
       - rapid_tick
-  schedule:
+  ticks:
     jobs:
       - tick
     triggers:
       - schedule:
-          cron: "0,30 * * * *"
+          cron: "0 * * * *"
+          filters:
+            branches:
+              only:
+                - main
+  tocks:
+    jobs:
+      - tick
+    triggers:
+      - schedule:
+          cron: "30 * * * *"
           filters:
             branches:
               only:
@@ -22,8 +32,8 @@ jobs:
       - checkout
       - run:
           name: Run a tick
-          command: docker compose up
-          no_output_timeout: 59m
+          command: timeout --preserve-status 40m docker compose up && docker-compose down || true
+          no_output_timeout: 45m
   rapid_tick:
     machine:
       image: default
@@ -31,5 +41,6 @@ jobs:
       - checkout
       - run:
           name: Run a rapid tick
-          command: docker compose up
+          command: timeout --preserve-status 1m docker compose up && docker-compose down || true
           no_output_timeout: 2m
+          
