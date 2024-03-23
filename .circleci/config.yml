@@ -1,0 +1,26 @@
+
+version: 2.1
+workflows:
+  commit:
+    jobs:
+      - tick
+  schedule:
+    jobs:
+      - tick
+    triggers:
+      - schedule:
+          cron: "0,30 * * * *"
+          filters:
+            branches:
+              only:
+                - main
+jobs:
+  tick:
+    machine:
+      image: default
+    steps:
+      - checkout
+      - run:
+          name: Run a tick
+          command: docker compose up
+          no_output_timeout: 59m
