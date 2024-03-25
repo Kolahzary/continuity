@@ -19,16 +19,22 @@ services:
   panel:
     image: ghcr.io/mhsanaei/3x-ui:latest
     container_name: panel
+    restart: unless-stopped
     volumes:
       - $PWD/config/x-ui.db:/etc/x-ui/x-ui.db
     environment:
       - XRAY_VMESS_AEAD_FORCED=false
       - XUI_LOG_LEVEL=error
+  tor:
+    image: lu4p/tor
+    container_name: tor
     restart: unless-stopped
+    volumes:
+      - $PWD/config/torrc:/etc/tor/torrc
   warp:
     image: caomingjun/warp
     container_name: warp
-    restart: always
+    restart: unless-stopped
     environment:
       - WARP_SLEEP=2
       # - WARP_LICENSE_KEY= # optional
@@ -39,3 +45,4 @@ services:
       - net.ipv4.conf.all.src_valid_mark=1
     volumes:
       - $PWD/config/warp:/var/lib/cloudflare-warp
+      
