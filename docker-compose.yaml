@@ -1,12 +1,5 @@
 
 services:
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    restart: unless-stopped
-    volumes:
-      - $PWD/html:/usr/share/nginx/html
-      - $PWD/config/nginx.conf:/etc/nginx/nginx.conf
   tunnel:
     image: cloudflare/cloudflared
     container_name: tunnel
@@ -17,12 +10,32 @@ services:
       - $PWD/config/cloudflared.yml:/etc/cloudflared/config.yml
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
-  savior:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    volumes:
+      - $PWD/config/nginx.conf:/etc/nginx/nginx.conf
+  panel:
     image: ghcr.io/mhsanaei/3x-ui:latest
-    container_name: savior
+    container_name: panel
     volumes:
       - $PWD/config/x-ui.db:/etc/x-ui/x-ui.db
     environment:
       - XRAY_VMESS_AEAD_FORCED=false
       - XUI_LOG_LEVEL=error
     restart: unless-stopped
+  warp:
+    image: caomingjun/warp
+    container_name: warp
+    restart: always
+    environment:
+      - WARP_SLEEP=2
+      # - WARP_LICENSE_KEY= # optional
+    cap_add:
+      - NET_ADMIN
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+      - net.ipv4.conf.all.src_valid_mark=1
+    volumes:
+      - $PWD/config/warp:/var/lib/cloudflare-warp
