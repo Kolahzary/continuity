@@ -13,9 +13,21 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       contents: read
+      packages: read
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: System info
+        run: |
+          docker --version
+          docker-compose --version
+          curl ipinfo.io
+          lsb_release -a
+          uname -a
+          lshw -short
+          free -h
+          df -h
 
       - name: Run rapid tick
         timeout-minutes: 2
