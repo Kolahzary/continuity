@@ -1,9 +1,11 @@
 
 services:
   tunnel:
-    image: cloudflare/cloudflared
+    image: cloudflare/cloudflared:latest
     container_name: tunnel
     restart: unless-stopped
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
     command: tunnel run
     volumes:
       - /etc/localtime:/etc/localtime:ro
@@ -14,35 +16,43 @@ services:
     image: nginx:alpine
     container_name: nginx
     restart: unless-stopped
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
     volumes:
       - $PWD/config/nginx.conf:/etc/nginx/nginx.conf
   panel:
-    image: ghcr.io/mhsanaei/3x-ui:latest
+    image: ghcr.io/mhsanaei/3x-ui:v2.2.6
     container_name: panel
     restart: unless-stopped
+    ports:
+      - 2053:2053
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
     volumes:
       - $PWD/config/x-ui.db:/etc/x-ui/x-ui.db
     environment:
       - XRAY_VMESS_AEAD_FORCED=false
       - XUI_LOG_LEVEL=error
   tor:
-    image: lu4p/tor
+    image: lncm/tor:latest
     container_name: tor
     restart: unless-stopped
     volumes:
       - $PWD/config/torrc:/etc/tor/torrc
   warp:
-    image: caomingjun/warp
+    image: monius/docker-warp-socks
     container_name: warp
+    privileged: true
     restart: unless-stopped
-    environment:
-      - WARP_SLEEP=2
-      # - WARP_LICENSE_KEY= # optional
     cap_add:
       - NET_ADMIN
+      - SYS_ADMIN
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
       - net.ipv4.conf.all.src_valid_mark=1
-    volumes:
-      - $PWD/config/warp:/var/lib/cloudflare-warp
-      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "https://www.cloudflare.com/cdn-cgi/trace"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
