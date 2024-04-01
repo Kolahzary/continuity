@@ -16,6 +16,8 @@ services:
     image: nginx:alpine
     container_name: nginx
     restart: unless-stopped
+    ports:
+      - 443:443
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
     volumes:
@@ -24,8 +26,6 @@ services:
     image: ghcr.io/mhsanaei/3x-ui:v2.2.6
     container_name: panel
     restart: unless-stopped
-    ports:
-      - 2053:2053
     sysctls:
       - net.ipv6.conf.all.disable_ipv6=0
     volumes:
