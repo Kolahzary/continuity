@@ -23,7 +23,7 @@ services:
     volumes:
       - $PWD/config/nginx.conf:/etc/nginx/nginx.conf
   panel:
-    image: ghcr.io/mhsanaei/3x-ui:v2.2.7
+    image: ghcr.io/mhsanaei/3x-ui:v2.2.8
     container_name: panel
     restart: unless-stopped
     sysctls:
