@@ -21,7 +21,6 @@ jobs:
       - name: System info
         run: |
           docker --version
-          docker-compose --version
           curl ipinfo.io
           lsb_release -a
           uname -a
