@@ -1,2 +1,8 @@
 ingress:
-  - service: http://nginx:80
+  - path: ^/tws$
+    service: http://panel:8080
+  - path: ^/ws$
+    service: http://panel:80
+  - path: admin
+    service: http://panel:2053
+  - service: https://ubuntu.anexia.at:443
