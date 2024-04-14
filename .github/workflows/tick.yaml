@@ -16,6 +16,7 @@ jobs:
 
       - name: System info
         run: |
+          date
           docker --version
           curl ipinfo.io
           lsb_release -a
@@ -25,7 +26,7 @@ jobs:
           df -h
 
       - name: Run a tick
-        timeout-minutes: 75
-        run: timeout --preserve-status 70m docker compose up && docker-compose down || true
+        timeout-minutes: 125
+        run: timeout --preserve-status 120m docker compose up && docker-compose down || true
         env:
           TUNNEL_TOKEN: ${{ secrets.CLOUDFLARE_TUNNEL_TOKEN }}
