@@ -2,7 +2,7 @@ name: tick
 
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '15 * * * *'
 
 jobs:
   tick:
@@ -30,8 +30,8 @@ jobs:
         run: |
           sudo hostname a$(date +"%H%M")
           /bin/sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/alloy/scripts/install-linux.sh)"
-          cat config/config.alloy >> /etc/alloy/config.yml
-          systemctl restart alloy
+          cat config/config.alloy || sudo tee -a /etc/alloy/config.yml
+          sudo systemctl restart alloy
         env:
           ARCH: amd64
           GCLOUD_HOSTED_METRICS_URL: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
