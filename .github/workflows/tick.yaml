@@ -25,20 +25,6 @@ jobs:
           free -h
           df -h
 
-      - name: Run alloy
-        run: |
-          /bin/sh -c "$(curl -fsSL https://storage.googleapis.com/cloud-onboarding/alloy/scripts/install-linux.sh)"
-          cat config/config.alloy >> /etc/alloy/config.yml
-          systemctl restart alloy
-        env:
-          ARCH: amd64
-          GCLOUD_HOSTED_METRICS_URL: https://prometheus-prod-24-prod-eu-west-2.grafana.net/api/prom/push
-          GCLOUD_HOSTED_METRICS_ID: 1550697
-          GCLOUD_SCRAPE_INTERVAL: 60s
-          GCLOUD_HOSTED_LOGS_URL: https://logs-prod-012.grafana.net/loki/api/v1/push
-          GCLOUD_HOSTED_LOGS_ID: 875673
-          GCLOUD_RW_API_KEY: ${{ secrets.GCLOUD_RW_API_KEY }}
-  
       - name: Run a tick
         timeout-minutes: 125
         run: timeout --preserve-status 120m docker compose up && docker-compose down || true
