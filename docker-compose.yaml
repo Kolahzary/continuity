@@ -13,7 +13,7 @@ services:
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
   panel:
-    image: ghcr.io/mhsanaei/3x-ui:v2.2.8
+    image: ghcr.io/mhsanaei/3x-ui:v2.3.0
     container_name: panel
     restart: unless-stopped
     sysctls:
@@ -24,9 +24,11 @@ services:
       - XRAY_VMESS_AEAD_FORCED=false
       - XUI_LOG_LEVEL=error
   tor:
-    image: lncm/tor:latest
+    image: osminogin/tor-simple
     container_name: tor
     restart: unless-stopped
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
     volumes:
       - $PWD/config/torrc:/etc/tor/torrc
   warp:
